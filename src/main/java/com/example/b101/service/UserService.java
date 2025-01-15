@@ -1,21 +1,34 @@
 package com.example.b101.service;
 
 import com.example.b101.domain.User;
+import com.example.b101.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
-public interface UserService {
+public class UserService {
 
+    private final UserRepository userRepository;
 
-    boolean isLogin(String username, String password);
-
-    //회원가입
-    User saveUser(User user);
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     //이메일로 사용자 검색
-    User findByEmail(String email);
+    public Optional<User> findByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
 
-    boolean isEmailExists(String email);
+    //닉네임으로 사용자 검색
+    public Optional<User> findByNicKname(String nickname) {
+        return userRepository.findByNickname(nickname);
+    }
+
+    //회원가입
+    public User saveUser(User user) {
+        return userRepository.save(user);
+    }
 
 
 }

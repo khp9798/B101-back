@@ -7,7 +7,6 @@ import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import org.springframework.data.redis.core.RedisHash;
 
 import java.time.LocalDateTime;
 
@@ -30,7 +29,7 @@ public class User {
     @Column(name = "USER_PASSWORD", nullable = false, length = 255)
     private String password; // 사용자 비밀번호 (해싱된 값 저장)
 
-    @Column(name = "USER_NICKNAME", nullable = false, length = 50)
+    @Column(name = "USER_NICKNAME", nullable = false, unique = true, length = 50)
     private String nickname; // 사용자 닉네임
 
     @Column(name = "CREATED_AT", updatable = false)
