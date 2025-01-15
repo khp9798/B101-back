@@ -35,6 +35,7 @@ dependencies {
 
     developmentOnly 'org.springframework.boot:spring-boot-devtools' // 수정 후 바로 반영 위한 devtools
 
+
     testImplementation 'org.springframework.boot:spring-boot-starter-test' // 테스트를 위한 의존성
     runtimeOnly 'com.mysql:mysql-connector-j' // mysql 의존성
 

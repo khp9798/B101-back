@@ -1,5 +1,6 @@
 package com.example.b101.domain;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,21 +14,21 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Entity
-@NoArgsConstructor //기본생성자 생성
+@NoArgsConstructor // 기본 생성자 생성
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "USERS")
+@Table(name = "USERS") // 테이블 이름
 public class User {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "USER_ID")
+    @Id // PK
+    @GeneratedValue
+    @Schema(hidden = true)
     private Long id; // 사용자 고유 ID
 
-    @Column(name = "USER_EMAIL", nullable = false, unique = true, length = 255)
-    private String email; // 사용자 이메일
+    @Column(name="user_email") //일반 회원가입 유저는 null 가능?
+    private String email;
 
-    @Column(name = "USER_PASSWORD", nullable = false, length = 255)
-    private String password; // 사용자 비밀번호 (해싱된 값 저장)
+    @Column(name = "USER_PASSWORD", length = 255)
+    private String password; // 사용자 비밀번호
 
     @Column(name = "USER_NICKNAME", nullable = false, unique = true, length = 50)
     private String nickname; // 사용자 닉네임
@@ -39,6 +40,4 @@ public class User {
     @Column(name = "UPDATED_AT")
     @LastModifiedDate
     private LocalDateTime updatedAt; // 수정일
-
-
 }

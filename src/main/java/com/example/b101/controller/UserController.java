@@ -9,7 +9,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/api")
 public class UserController {
 
     private final UserService userService;
@@ -70,6 +70,7 @@ public class UserController {
 
         return ResponseEntity.badRequest().body("가입되지 않은 닉네임입니다.");
     }
+
 
 
 }
