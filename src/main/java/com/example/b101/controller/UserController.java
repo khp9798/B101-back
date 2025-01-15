@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/api")
 public class UserController {
 
     private final UserService userService;
@@ -16,30 +16,49 @@ public class UserController {
         this.userService = userService;
     }
 
-    //회원가입
+
     @PostMapping("/signup")
     public ResponseEntity<?> signup(@RequestBody User user) {
-        try {
-            if(userService.isEmailExists(user.getEmail())) {
-                return ResponseEntity.status(HttpStatus.CONFLICT).body("이미 사용중인 이메일입니다.");
-            }
-            User savedUser = userService.saveUser(user);
-            return ResponseEntity.ok(savedUser);
-        }catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("회원가입 실패 : "+e.getMessage());
+        if(userService.findByNicKname(user.getNickname()).isPresent()) {
+            return new ResponseEntity<>("이미 사용중인 닉네임입니다.", HttpStatus.CONFLICT);
         }
 
-    };
+        if (userService.findByEmail(user.getEmail()).isPresent()) {
+            return new ResponseEntity<>("이미 가입된 이메일입니다.", HttpStatus.CONFLICT);
+        }
+
+        User newUser = userService.saveUser(user);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
+    }
+
+
+    @GetMapping("/check-nickname")
+    public ResponseEntity<?> checkNickname(@RequestParam("nickname") String nickname) {
+        if(userService.findByEmail(nickname).isPresent()) {
+            return ResponseEntity
+                    .status(HttpStatus.CONFLICT)
+                    .body("이미 사용중인 닉네임입니다.");
+        }
+
+        return ResponseEntity.ok().build();
+    }
+
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestParam String email, @RequestParam String password) {
-        boolean isLogin = userService.isLogin(email, password);
+    public ResponseEntity<?> login(@RequestParam String nickname, @RequestParam String password) {
+        if(userService.findByNicKname(nickname).isPresent()) {
+            User newUser = userService.findByNicKname(nickname).get();
 
-        if(isLogin) {
-            return ResponseEntity.ok("로그인 성공");
-        }else{
-            return ResponseEntity.status(401).body("로그인 실패 : 이메일 또는 비밀번호가 일치하지 않습니다.");
+            if(newUser.getPassword().equals(password)) {
+                return ResponseEntity.status(HttpStatus.OK).body(nickname);
+            }else{
+                return ResponseEntity.badRequest().body("비밀번호가 틀렸습니다.");
+            }
         }
+
+        return ResponseEntity.badRequest().body("가입되지 않은 닉네임입니다.");
     }
+
 
 }
