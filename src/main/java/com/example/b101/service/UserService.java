@@ -21,7 +21,7 @@ public class UserService {
     }
 
     //닉네임으로 사용자 검색
-    public Optional<User> findByNicKname(String nickname) {
+    public Optional<User> findByNickname(String nickname) {
         return userRepository.findByNickname(nickname);
     }
 

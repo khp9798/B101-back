@@ -5,39 +5,51 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
 @Entity
-@NoArgsConstructor // 기본 생성자 생성
+@NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "USERS") // 테이블 이름
+@Table(name = "USERS")
 public class User {
 
-    @Id // PK
-    @GeneratedValue
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Schema(hidden = true)
-    private Long id; // 사용자 고유 ID
+    private Long id;
 
-    @Column(name="user_email") //일반 회원가입 유저는 null 가능?
+    @Column(name = "USER_EMAIL", nullable = true) // 이메일은 null 허용
     private String email;
 
-    @Column(name = "USER_PASSWORD", length = 255)
-    private String password; // 사용자 비밀번호
+    @Column(name = "USER_PASSWORD", length = 255) // 비밀번호 필수
+    private String password;
 
-    @Column(name = "USER_NICKNAME", nullable = false, unique = true, length = 50)
-    private String nickname; // 사용자 닉네임
+    @Column(name = "USER_NICKNAME", length = 50, nullable = true)
+    private String nickname;
+
+    @Column(name = "USERNAME", unique = true) // 고유 필드
+    private String username;
+
+    @Column(name = "ROLE", nullable = false)
+    private String role = "ROLE_USER"; // 기본값 설정
 
     @Column(name = "CREATED_AT", updatable = false)
     @CreatedDate
-    private LocalDateTime createdAt; // 생성일
+    private LocalDateTime createdAt;
 
     @Column(name = "UPDATED_AT")
     @LastModifiedDate
-    private LocalDateTime updatedAt; // 수정일
+    private LocalDateTime updatedAt;
+
+    @OneToMany(mappedBy = "user")
+    private List<Author> books = new ArrayList<>();
 }

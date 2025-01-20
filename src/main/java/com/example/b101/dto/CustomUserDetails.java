@@ -1,35 +1,41 @@
 package com.example.b101.dto;
 
-import com.example.b101.domain.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
 import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
 
 public class CustomUserDetails implements UserDetails {
 
-    private Optional<User> user;
+    private String email;
+    private String password;
+    private String nickname;
+    private String role;
 
-    public CustomUserDetails(Optional<User> user) {
-        this.user = user;
+    public CustomUserDetails(String email, String password, String nickname) {
+        this.email = email;
+        this.password = password;
+        this.nickname = nickname;
+    }
+
+    public String getNickname() {
+        return nickname;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+        return null; // 권한 정보가 필요하면 추가
     }
 
     @Override
     public String getPassword() {
-        return user.get().getPassword();
+        return password;
     }
 
     @Override
     public String getUsername() {
-        return user.get().getNickname();
+        return email;
     }
 
 
+    public String getRole(){return role;}
 }
